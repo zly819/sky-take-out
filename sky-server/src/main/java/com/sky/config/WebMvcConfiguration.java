@@ -51,6 +51,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo)
                 .select()
+                //扫描控制器所在包
                 .apis(RequestHandlerSelectors.basePackage("com.sky.controller"))
                 .paths(PathSelectors.any())
                 .build();

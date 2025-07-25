@@ -31,4 +31,10 @@ public interface EmployeeMapper {
      * @return
      */
     Page<Employee> list(String name);
+
+    /**
+     * 启用禁用员工，更新员工（包括更新状态）
+     * @param employee
+     */
+    void update(Employee employee);
 }

@@ -100,4 +100,18 @@ public class EmployeeController {
         return Result.success(pageResult);
     }
 
+    /**
+     * 启用禁用员工
+     * @param status
+     * @param id
+     * @return
+     */
+    @ApiOperation("启用禁用员工")
+    @PostMapping("/status/{status}")
+    public Result enableOrDisable(@PathVariable Integer status, Long id){
+        log.info("员工状态修改：status = {}, id = {}",status, id);
+        employeeService.enableOrDisable(status, id);
+        return Result.success();
+    }
+
 }

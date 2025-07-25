@@ -2,8 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.CategoryMapper">
+    <!--根据id删除分类-->
+    <delete id="deleteById">
+    delete from category where id = #{id}
+    </delete>
 
-<!--分类分页查询-->
+    <!--分类分页查询-->
     <select id="pageQuery" resultType="com.sky.entity.Category">
         select * from category
         <where>

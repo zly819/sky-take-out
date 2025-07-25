@@ -45,11 +45,23 @@ public class CategoryController {
      */
     @ApiOperation("分类分页查询")
     @GetMapping("/page")
-    public Result page(CategoryPageQueryDTO categoryPageQueryDTO) {
+    public Result<PageResult> page(CategoryPageQueryDTO categoryPageQueryDTO) {
         log.info("分类分页查询:{}", categoryPageQueryDTO);
         PageResult pageResult = categoryService.pageQuery(categoryPageQueryDTO);
         return Result.success(pageResult);
+    }
 
+    /**
+     * 删除分类
+     * @param id
+     * @return
+     */
+    @ApiOperation("删除分类")
+    @DeleteMapping
+    public Result<String> deleteById(Long id) {
+        log.info("删除分类:{}",id);
+        categoryService.deleteById(id);
+        return Result.success();
     }
 
 }

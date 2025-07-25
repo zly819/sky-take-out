@@ -132,5 +132,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee;
     }
 
+    /**
+     * 编辑员工信息
+     * @param dto
+     */
+    @Override
+    public void update(EmployeeDTO dto) {
+        Employee employee = new Employee();
+        //拷贝属性值
+        BeanUtils.copyProperties(dto, employee);
+        //补充更新时间和更新人
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employeeMapper.update(employee);
+    }
+
 
 }

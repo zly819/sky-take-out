@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author 张立业
  * @version 1.0
@@ -49,5 +51,18 @@ public class DishController {
         log.info("分页查询菜品列表:{}",dto);
         PageResult pageResult = dishService.page(dto);
         return Result.success(pageResult);
+    }
+
+    /**
+     * 删除菜品
+     * @param ids
+     * @return
+     */
+    @ApiOperation("删除菜品")
+    @DeleteMapping
+    public Result delete(@RequestParam List<Long> ids){
+        log.info("删除菜品：{}",ids);
+        dishService.delete(ids);
+        return Result.success();
     }
 }

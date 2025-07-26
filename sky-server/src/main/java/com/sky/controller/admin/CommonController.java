@@ -2,6 +2,7 @@ package com.sky.controller.admin;
 
 import com.sky.result.Result;
 import com.sky.utils.AliOssUtil;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,7 @@ public class CommonController {
     //使用阿里云oss上传
     @PostMapping("/upload")
     @ResponseBody
+    @ApiOperation("文件上传")
     public Result upload(MultipartFile file) {
         //获取原始文件名
         String originalFilename = file.getOriginalFilename();

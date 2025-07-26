@@ -3,7 +3,7 @@ package com.sky.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
-@Mapper
+//@Mapper
 public interface SetmealMapper {
     /**
      * 根据分类id查询套餐的数量

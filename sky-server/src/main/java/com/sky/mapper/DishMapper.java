@@ -1,8 +1,11 @@
 package com.sky.mapper;
 
+import com.github.pagehelper.Page;
 import com.sky.anno.AutoFill;
+import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
+import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -27,4 +30,11 @@ public interface DishMapper {
 //    @Insert("insert into dish values (null, #{name}, #{categoryId},#{price}, #{image}," +
 //            "#{description}, #{status},#{createTime}, #{updateTime},#{createUser}, #{updateUser})")
     void insert(Dish dish);
+
+    /**
+     * 分页查询菜品列表
+     * @param dto
+     * @return
+     */
+    Page<DishVO> list(DishPageQueryDTO dto);
 }

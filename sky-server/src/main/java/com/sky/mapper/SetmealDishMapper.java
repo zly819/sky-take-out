@@ -5,8 +5,15 @@ import java.util.List;
 public interface SetmealDishMapper {
     /**
      * 根据id查询菜品
-     * @param ids
+     * @param dishIds
      * @return
      */
     Integer countByDishId(List<Long> dishIds);
+
+    /**
+     *启用或停用菜品
+     * @param dishIds
+     * @return
+     */
+    List<Long> getSetmealIdByDishIds(List<Long> dishIds);
 }

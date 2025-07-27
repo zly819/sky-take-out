@@ -38,7 +38,7 @@ public interface DishMapper {
      * @param dto
      * @return
      */
-    Page<DishVO> list(DishPageQueryDTO dto);
+    Page<DishVO> page(DishPageQueryDTO dto);
 
     /**
      * 根据id查询菜品
@@ -59,4 +59,11 @@ public interface DishMapper {
      */
     @AutoFill(OperationType.UPDATE)
     void update(Dish dish);
+
+    /**
+     * 根据分类id查询菜品
+     * @param dish
+     * @return
+     */
+    List<Dish> list(Dish dish);
 }

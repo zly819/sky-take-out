@@ -82,7 +82,7 @@ public class DishServiceImpl implements DishService {
         //1.设置分页参数
         PageHelper.startPage(dto.getPage(), dto.getPageSize());
         //2.调用mapper的类表查询，强转为page
-         Page<DishVO> page = dishMapper.list(dto);
+         Page<DishVO> page = dishMapper.page(dto);
         //3.封装PageResult对象并返回
         return new PageResult(page.getTotal(), page.getResult());
     }
@@ -189,5 +189,19 @@ public class DishServiceImpl implements DishService {
                 }
             }
         }
+    }
+
+    /**
+     * 根据分类id查询菜品
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public List<Dish> list(Long categoryId) {
+        Dish dish = Dish.builder()
+                .categoryId(categoryId)
+                .status(StatusConstant.ENABLE)
+                .build();
+        return dishMapper.list(dish);
     }
 }

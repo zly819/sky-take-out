@@ -2,6 +2,7 @@ package com.sky.controller.user;
 
 import com.sky.result.Result;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @RestController("userShopController")
 @RequestMapping("/user/shop")
 @Slf4j
-@Api(tags = "获取店铺状态")
+@Api(tags = "用户端店铺状态操作")
 public class ShopController {
 
     @Autowired
@@ -30,6 +31,7 @@ public class ShopController {
      * @return
      */
     @GetMapping("/status")
+    @ApiOperation("获取店铺状态")
     public Result<Integer> getShopStatus() {
         Integer status = Optional.ofNullable((Integer) redisTemplate.opsForValue().get("SHOP_STATUS")).orElse(0);
         log.info("获取店铺状态: {}", status == 1 ? "营业" : "休息");

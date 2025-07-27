@@ -1,6 +1,7 @@
 package com.sky.controller.admin;
 
 import com.sky.result.Result;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @RestController("adminShopController")
 @RequestMapping("/admin/shop")
 @Slf4j
+@Api(tags = "获取店铺状态")
 public class ShopController {
 
     @Autowired

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * 阿里oss配置类，用来生成AliOssUtil对象，并交由IOC容器管理
- * @author 张立业
+ * @author ZLY
  * @version 1.0
  */
 @Slf4j

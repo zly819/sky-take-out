@@ -47,7 +47,7 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
         try {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), token);
-            Long userId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
+            Long userId = Long.valueOf(claims.get(JwtClaimsConstant.USER_ID).toString());
             //将获取到的微信用户id存入到ThreadLocal中，供后续使用
             BaseContext.setCurrentId(userId);
             log.info("当前员工id：{}", userId);

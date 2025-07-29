@@ -50,4 +50,26 @@ public interface ShoppingCartMapper {
      */
     @Delete("delete from shopping_cart where user_id = #{userId} ")
     void delete(Long userId);
+
+    /**
+     * 根据id删除购物车数据
+     * @param id
+     */
+    @Delete("delete from shopping_cart where id = #{id}")
+    void deleteById(Long id);
+
+    /**
+     * 根据id修改商品数量
+     * @param cart
+     */
+    @Update("update shopping_cart set number = #{number} where id = #{id}")
+    void updateNumberById(ShoppingCart cart);
+
+    /**
+     * 动态条件查询
+     * @param shop
+     * @return
+     */
+
+    List<ShoppingCart> listBy(ShoppingCart shop);
 }

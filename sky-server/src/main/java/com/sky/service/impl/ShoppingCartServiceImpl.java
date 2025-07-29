@@ -70,7 +70,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }else {//代表购物车有该商品数据
 
             //4.将原来的购物数量+1，调用mapper更新方法
-            cart.setNumber(shoppingCart.getNumber() + 1);
+            cart.setNumber(cart.getNumber() + 1);
             shoppingCartMapper.update(cart);
         }
 

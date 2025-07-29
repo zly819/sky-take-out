@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author ZLY
@@ -74,5 +75,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
 
         //最终目的：将用户添加的商品，存入到购物车表中shopping_cart表
+    }
+
+    /**
+     * 查看购物车
+     * @return
+     */
+    @Override
+    public List<ShoppingCart> list() {
+        return shoppingCartMapper.list(BaseContext.getCurrentId());
     }
 }

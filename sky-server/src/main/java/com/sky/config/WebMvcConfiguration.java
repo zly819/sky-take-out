@@ -117,4 +117,6 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         //3.将自定义的消息对象转换器设置为优先级最高
         converters.add(0, converter);
     }
+
+
 }

@@ -5,8 +5,10 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+@EnableScheduling               //开启任务调度功能
 @EnableCaching                  //开启缓存注解功能
 @MapperScan("com.sky.mapper")   //指定扫描mapper
 @SpringBootApplication

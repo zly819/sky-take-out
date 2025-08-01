@@ -1,5 +1,6 @@
 package com.sky.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
@@ -16,6 +17,7 @@ import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +42,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderDetailMapper orderDetailMapper;
+
+
 
     /**
      * 订单搜索
@@ -236,4 +242,6 @@ public class OrderServiceImpl implements OrderService {
         // 将该订单对应的所有菜品信息拼接在一起
         return String.join("", orderDishList);
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.sky.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -17,6 +18,7 @@ import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +58,9 @@ public class OrdersServiceImpl implements OrdersService {
 
     @Autowired
     private WeChatPayUtil weChatPayUtil;
+
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     /**
      * 用户下单--最终目的：将订单数据存入表中（orders、order_detail）
@@ -182,6 +189,15 @@ public class OrdersServiceImpl implements OrdersService {
                 .build();
 
         ordersMapper.update(orders);
+
+        // 通过websocket通知商家
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", 1); // 1:来单通知
+        map.put("orderId", ordersDB.getId());
+        map.put("content", "订单号: " + outTradeNo);
+
+        String msg = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(msg);
     }
 
     /**
@@ -312,5 +328,19 @@ public class OrdersServiceImpl implements OrdersService {
         // 将购物车对象批量添加到数据库
         shoppingCartMapper.insertBatch(shoppingCartList);
 
+    }
+
+    @Override
+    public void reminder(Long id) {
+        // 催单----》用户点击催单按钮，需要服务端给客户端推送消息
+        Orders orders = ordersMapper.getById(id);
+        if (orders == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        Map map = new HashMap();
+        map.put("type", 2);         //2-代表催单
+        map.put("orderId", id);
+        map.put("content", "订单号：" + orders.getNumber());
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
     }
 }

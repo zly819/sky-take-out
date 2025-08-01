@@ -9,6 +9,7 @@ import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrdersMapper;
 import com.sky.result.PageResult;
 import com.sky.service.OrderService;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,25 @@ public class OrderServiceImpl implements OrderService {
         List<OrderVO> orderVOList = getOrderVOList(page);
 
         return new PageResult(page.getTotal(), orderVOList);
+    }
+
+    /**
+     * 各个状态的订单数量统计
+     *
+     * @return
+     */
+    @Override
+    public OrderStatisticsVO statistics() {
+        // 根据状态，分别查询出待接单、待派送、派送中的订单数量
+        Integer toBeConfirmed = ordersMapper.countStatus(Orders.TO_BE_CONFIRMED);
+        Integer confirmed = ordersMapper.countStatus(Orders.CONFIRMED);
+        Integer deliveryInProgress = ordersMapper.countStatus(Orders.DELIVERY_IN_PROGRESS);
+        // 将查询出的数据封装到orderStatisticsVO中响应
+        OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
+        orderStatisticsVO.setToBeConfirmed(toBeConfirmed);
+        orderStatisticsVO.setConfirmed(confirmed);
+        orderStatisticsVO.setDeliveryInProgress(deliveryInProgress);
+        return orderStatisticsVO;
     }
 
     private List<OrderVO> getOrderVOList(Page<Orders> page) {

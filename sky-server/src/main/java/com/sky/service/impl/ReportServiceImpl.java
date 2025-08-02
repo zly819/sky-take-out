@@ -5,15 +5,19 @@ import com.sky.entity.Orders;
 import com.sky.mapper.OrdersMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
-import com.sky.vo.OrderReportVO;
-import com.sky.vo.SalesTop10ReportVO;
-import com.sky.vo.TurnoverReportVO;
-import com.sky.vo.UserReportVO;
+import com.sky.service.WorkspaceService;
+import com.sky.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -31,6 +35,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private WorkspaceService workspaceService;
 
     /**
      * 营业额数据统计
@@ -204,6 +211,60 @@ public class ReportServiceImpl implements ReportService {
                 .nameList(StringUtils.join(nameList, ","))
                 .numberList(StringUtils.join(numberList, ","))
                 .build();
+    }
+
+    @Override
+    public void export(HttpServletResponse response) {
+        // 1.查询近30天的运营数据
+        LocalDate now = LocalDate.now();        // 2024-05-23
+        LocalDate end = now.minusDays(1); // 2024-05-22
+        LocalDate begin = now.minusDays(30);    // 2024-04-22
+        // LocalDateTime end =
+        LocalDateTime beginTime = LocalDateTime.of(begin, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(end, LocalTime.MAX);
+        BusinessDataVO businessData = workspaceService.getBusinessData(beginTime, endTime);
+
+        // 2.往Excel表中写入数据
+        // 根据类加载器读取项目中的模板文件, 基于模板文件创建Excel对象
+//        InputStream is = this.getClass().getClassLoader().getResourceAsStream("运营数据报表模板.xlsx");
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream("template/运营数据报表模板.xlsx");
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook(is);
+            XSSFSheet sheet = workbook.getSheet("Sheet1");
+            sheet.getRow(1).getCell(1).setCellValue("时间：" + begin + "至" + end);
+            sheet.getRow(3).getCell(2).setCellValue(businessData.getTurnover());    //营业额
+            sheet.getRow(3).getCell(4).setCellValue(businessData.getOrderCompletionRate());    //订单完成率
+            sheet.getRow(3).getCell(6).setCellValue(businessData.getNewUsers());    //新增用户数
+
+            sheet.getRow(4).getCell(2).setCellValue(businessData.getValidOrderCount()); //有效订单
+            sheet.getRow(4).getCell(4).setCellValue(businessData.getUnitPrice());       //平均客单价
+
+            // 30天明细数据填充
+            for (int i = 0; i < 30; i++) {
+                LocalDate date = begin.plusDays(i);
+                beginTime = LocalDateTime.of(date, LocalTime.MIN); //4-23 00:00
+                endTime = LocalDateTime.of(date, LocalTime.MAX);   //4-23 23:59:59.999999
+                businessData = workspaceService.getBusinessData(beginTime, endTime);
+
+                sheet.getRow(7+i).getCell(1).setCellValue(date.toString());
+                sheet.getRow(7+i).getCell(2).setCellValue(businessData.getTurnover());
+                sheet.getRow(7+i).getCell(3).setCellValue(businessData.getValidOrderCount());
+                sheet.getRow(7+i).getCell(4).setCellValue(businessData.getOrderCompletionRate());
+                sheet.getRow(7+i).getCell(5).setCellValue(businessData.getUnitPrice());
+                sheet.getRow(7+i).getCell(6).setCellValue(businessData.getNewUsers());
+            }
+
+            // 3.通过输出流将Excel文件对象下载到客户端浏览器
+            ServletOutputStream os = response.getOutputStream();
+            workbook.write(os);
+
+            // 4.释放资源
+            os.close();
+            workbook.close();
+            is.close();
+        } catch (IOException e) {
+            log.error("文件写入失败！！！{}",e.getMessage());
+        }
     }
 
 

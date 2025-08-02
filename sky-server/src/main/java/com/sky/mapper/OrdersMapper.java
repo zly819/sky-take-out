@@ -66,4 +66,11 @@ public interface OrdersMapper {
      */
     @Select("select sum(amount) from orders where status = #{status} and order_time between #{beginTime} and #{endTime}")
     Double sumByMap(Map map);
+
+    /**
+     * 用户统计
+     * @param map
+     * @return
+     */
+    Integer countByMap(Map map);
 }
